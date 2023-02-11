@@ -7,7 +7,15 @@ import java.util.Collections;
 public class Main {
 
     public static void main(String[] args) {
+//        Person p = new Person("xiaoming", 12);
+//        p.setName("Huang", "xiaoming");
+//        System.out.println(p.getName());
+//        p.setName("Huang");
 
+//        p.setAge(12);
+//        System.out.println(p.getName());
+//        System.out.println(p.getAge());
+//        Student s = new Student("Xiao Ming", 12, 89);
     }
 
     /*commandLine*/
@@ -84,6 +92,82 @@ public class Main {
         quicksort(ary, L, right - 1);
         quicksort(ary, right + 1, R);
         return ary;
+    }
+}
+
+/*class person*/
+class Person {
+    protected String name;
+    private int age = 9;
+
+    public Person(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    public Person(String name) {
+        this(name, 18);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+//    public Person() {
+//        this("unNamed");
+//    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setName(String firstName, String lastName) {
+        this.name = firstName + lastName;
+
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        if (age < 0 || age > 100) {
+            throw new IllegalArgumentException("invalid age value");
+        }
+        this.age = age;
+    }
+}
+
+class Student extends Person {
+    private int score;
+    protected Book book;
+
+    public int getScore() {
+        return this.score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+    public String Hello() {
+        return name;
+    }
+
+    public Student(String name, int age, int score) {
+        super(name, age);
+        this.score = score;
+    }
+}
+
+class Book {
+    protected String name;
+
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
     }
 }
 
