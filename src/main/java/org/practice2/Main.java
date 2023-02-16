@@ -1,34 +1,43 @@
 package org.practice2;
 
 import java.beans.*;
+import java.math.BigInteger;
+import java.util.Random;
+
 import org.practice2.example.*;
 
-public class Main {
-    public static void main(String[] args) throws IntrospectionException {
-//        Adder adder = new Adder();
-//        adder.add(2).add(3).inc().add(5);
-//        System.out.println(adder.value());
+import javax.security.auth.login.LoginException;
 
-//        String[] fields = { "name", "position", "salary" };
-//        String table = "employee";
-//        String insert = Util.buildInsertSql(table, fields);
-//        String select = Util.buildSelectSql(table, fields);
-//        System.out.println(insert);
-//        System.out.println(select);
-//        String s = "INSERT INTO employee (name, position, salary) VALUES (?, ?, ?)";
-//        System.out.println(s.equals(insert) ? "测试成功" : "测试失败");
-        Weekday day = Weekday.SUN;
-        System.out.println(day);
-        if (day.dayValue == 6 || day.dayValue == 0) {
-            System.out.println("Today is " + day + ". Work at home!");
+public class Main {
+    public static void main(String[] args) throws Exception {
+        String token = login("adminUser", "pass");
+        System.out.println("Token: " + token);
+    }
+
+    static String login(String username, String password) {
+        if (username.equals("admin")) {
+            if (password.equals("password")) {
+                return "succeed";
+            } else {
+                throw new LoginFailedException("incorrect username or password");
+            }
         } else {
-            System.out.println("Today is " + day + ". Work at office!");
+            throw new UserNotFoundException("User not found");
         }
 
     }
 
+    static class LoginFailedException extends BaseException {
+        public LoginFailedException(String message) {
+            super(message);
+        }
+    }
+
+    static class UserNotFoundException extends BaseException {
+        public UserNotFoundException(String message) {
+            super(message);
+        }
+    }
 
 }
-
-
 
