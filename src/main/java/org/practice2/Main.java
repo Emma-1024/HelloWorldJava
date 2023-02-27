@@ -1,50 +1,52 @@
 package org.practice2;
 
-import java.util.*;
+import java.util.Comparator;
+import java.util.PriorityQueue;
+import java.util.Queue;
 
 public class Main {
     public static void main(String[] args) throws Exception {
-        List<Message> received = List.of(
-                new Message(1, "Hello!"),
-                new Message(2, "发工资了吗？"),
-                new Message(2, "发工资了吗？"),
-                new Message(3, "去哪吃饭？"),
-                new Message(3, "去哪吃饭？"),
-                new Message(4, "Bye")
-        );
+        Queue<User> q = new PriorityQueue<>(new UserComparator());
+        q.offer(new User("Bob", "A1"));
+        q.offer(new User("Alice", "A2"));
+        q.offer(new User("Boss", "V1"));
+        System.out.println(q.poll().toString()); // Boss/V1
+        System.out.println(q.poll().toString()); // Bob/A1
+        System.out.println(q.poll().toString()); // Alice/A2
+        System.out.println(q.poll()); // null,因为队列为空
+    }
+}
 
-        List<Message> displayMessages = process(received);
-        for (Message message : displayMessages) {
-            System.out.println(message.text);
+class UserComparator implements Comparator<User> {
+    public int compare(User u1, User u2) {
+
+        if (u1.number.charAt(0) == u2.number.charAt(0)) {
+            int i1 = Integer.parseInt(u1.number.substring(1));
+            int i2 = Integer.parseInt(u2.number.substring(1));
+            return (i1 - i2);
+        }
+        if (u1.number.charAt(0) == 'V') {
+            return -1;
+        } else {
+            return 1;
         }
     }
-
-    // remove duplicates and keep unique messages"
-    static List<Message> process(List<Message> received) {
-        // TODO
-        Set<Message> set = new TreeSet<>(new Comparator<Message>() {
-            public int compare(Message m1, Message m2) {
-                return Integer.compare(m1.sequence, m2.sequence);
-            }
-        });
-//        for(Message m: received ){
-//            set.add(m);
-//        }
-        set.addAll(received);
-        return new ArrayList<Message>(set);
-    }
-
 }
 
-class Message {
-    public int sequence;
-    public String text;
+class User {
+    public final String name;
+    public final String number;
 
-    public Message(int sequence, String text) {
-        this.sequence = sequence;
-        this.text = text;
+    public User(String name, String number) {
+        this.name = name;
+        this.number = number;
+    }
+
+    public String toString() {
+        return "{" + name + ',' + number + "}";
     }
 }
+
 
 
 
