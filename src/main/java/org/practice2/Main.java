@@ -1,39 +1,48 @@
 package org.practice2;
 
-import java.lang.reflect.Array;
-import java.lang.reflect.Field;
-import java.time.DayOfWeek;
 import java.util.*;
 
 public class Main {
     public static void main(String[] args) throws Exception {
-        Map<Student, Integer> map = new TreeMap<>(new Comparator<Student>() {
-            public int compare(Student p1, Student p2) {
-                return Integer.compare(p2.score, p1.score);
+        List<Message> received = List.of(
+                new Message(1, "Hello!"),
+                new Message(2, "发工资了吗？"),
+                new Message(2, "发工资了吗？"),
+                new Message(3, "去哪吃饭？"),
+                new Message(3, "去哪吃饭？"),
+                new Message(4, "Bye")
+        );
+
+        List<Message> displayMessages = process(received);
+        for (Message message : displayMessages) {
+            System.out.println(message.text);
+        }
+    }
+
+    // remove duplicates and keep unique messages"
+    static List<Message> process(List<Message> received) {
+        // TODO
+        Set<Message> set = new TreeSet<>(new Comparator<Message>() {
+            public int compare(Message m1, Message m2) {
+                return Integer.compare(m1.sequence, m2.sequence);
             }
         });
-        map.put(new Student("Tom", 77), 1);
-        map.put(new Student("Bob", 66), 2);
-        map.put(new Student("Lily", 99), 3);
-        for (Student key : map.keySet()) {
-            System.out.println(key);
-        }
-        System.out.println(map.get(new Student("Bob", 66))); // null?
+//        for(Message m: received ){
+//            set.add(m);
+//        }
+        set.addAll(received);
+        return new ArrayList<Message>(set);
     }
 
 }
 
-class Student {
-    public String name;
-    public int score;
+class Message {
+    public int sequence;
+    public String text;
 
-    Student(String name, int score) {
-        this.name = name;
-        this.score = score;
-    }
-
-    public String toString() {
-        return String.format("{%s: score=%d}", name, score);
+    public Message(int sequence, String text) {
+        this.sequence = sequence;
+        this.text = text;
     }
 }
 
