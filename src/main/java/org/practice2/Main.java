@@ -1,51 +1,57 @@
 package org.practice2;
 
-import java.util.Comparator;
-import java.util.PriorityQueue;
-import java.util.Queue;
+import java.util.*;
 
 public class Main {
     public static void main(String[] args) throws Exception {
-        Queue<User> q = new PriorityQueue<>(new UserComparator());
-        q.offer(new User("Bob", "A1"));
-        q.offer(new User("Alice", "A2"));
-        q.offer(new User("Boss", "V1"));
-        System.out.println(q.poll().toString()); // Boss/V1
-        System.out.println(q.poll().toString()); // Bob/A1
-        System.out.println(q.poll().toString()); // Alice/A2
-        System.out.println(q.poll()); // null,因为队列为空
-    }
-}
-
-class UserComparator implements Comparator<User> {
-    public int compare(User u1, User u2) {
-
-        if (u1.number.charAt(0) == u2.number.charAt(0)) {
-            int i1 = Integer.parseInt(u1.number.substring(1));
-            int i2 = Integer.parseInt(u2.number.substring(1));
-            return (i1 - i2);
-        }
-        if (u1.number.charAt(0) == 'V') {
-            return -1;
+        String hex = toHex(12500);
+        if (hex.equalsIgnoreCase("30D4")) {
+            System.out.println("测试通过");
         } else {
-            return 1;
+            System.out.println("测试失败");
         }
     }
-}
 
-class User {
-    public final String name;
-    public final String number;
-
-    public User(String name, String number) {
-        this.name = name;
-        this.number = number;
+    private static String toHex(int i) {
+        Deque<String> deque = new LinkedList<>();
+        String s = Integer.toString(i);
+        int hexBase = 16;
+        while (i > hexBase || i % hexBase != 0) {
+            int remainder = i % hexBase;
+            if(remainder<10){
+              deque.push(String.valueOf(remainder));
+            }
+            else if(remainder==10){
+                deque.push("A");
+            }
+            else if(remainder==11){
+                deque.push("B");
+            }
+            else if(remainder==12){
+                deque.push("C");
+            }
+            else if(remainder==13){
+                deque.push("D");
+            }
+            else if(remainder==14){
+                deque.push("E");
+            }
+            else if(remainder==15){
+                deque.push("F");
+            }
+//            deque.push(Integer.toHexString(i % hexBase));
+            i = i / hexBase;
+        }
+        StringBuilder res = new StringBuilder();
+        int len = deque.size();
+        for (int k = 0; k < len; k++) {
+            res.append(deque.pop());
+        }
+        return res.toString();
     }
 
-    public String toString() {
-        return "{" + name + ',' + number + "}";
-    }
 }
+
 
 
 
