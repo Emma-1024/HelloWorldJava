@@ -1,51 +1,30 @@
 package org.practice2;
 
-import java.util.*;
-import java.util.function.Consumer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Main {
+    public int age;
+
     public static void main(String[] args) throws Exception {
-        ReverseList<String> rlist = new ReverseList<>();
-        rlist.add("Apple");
-        rlist.add("Orange");
-        rlist.add("Pear");
-        for (String s : rlist) {
-            System.out.println(s);
-        }
-    }
-}
-class ReverseList<T> implements Iterable<T> {
-    private final List<T> list = new LinkedList<>();
-
-    public void add(T t){
-        list.add(t);
-    }
-
-    @Override
-    public Iterator<T> iterator() {
-        return new ReverseIterator(list.size());
-    }
-
-    class ReverseIterator implements Iterator<T> {
-        int index;
-
-        ReverseIterator(int index) {
-            this.index = index;
+        Pattern pattern = Pattern.compile("([01]\\d|2[0-3]):([0-5]\\d):([0-5]\\d)");
+        System.out.println(pattern.matcher("23:01:59").matches()); // true
+        Matcher matcher = pattern.matcher("23:01:59");
+        if (matcher.matches()) {
+            String whole = matcher.group(0);
+            String hour = matcher.group(1);
+            String minutes = matcher.group(2);
+            String second = matcher.group(3);
+            System.out.println(whole);
+            System.out.println(hour);
+            System.out.println(minutes);
+            System.out.println(second);
         }
 
-        @Override
-        public boolean hasNext() {
-            return index > 0;
-        }
-
-        @Override
-        public T next() {
-            index--;
-            return ReverseList.this.list.get(index);
-        }
     }
 
 }
+
 
 
 
