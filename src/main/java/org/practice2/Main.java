@@ -1,5 +1,8 @@
 package org.practice2;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -7,25 +10,38 @@ public class Main {
     public int age;
 
     public static void main(String[] args) throws Exception {
-        Pattern pattern = Pattern.compile("([01]\\d|2[0-3]):([0-5]\\d):([0-5]\\d)");
-        System.out.println(pattern.matcher("23:01:59").matches()); // true
-        Matcher matcher = pattern.matcher("23:01:59");
-        if (matcher.matches()) {
-            String whole = matcher.group(0);
-            String hour = matcher.group(1);
-            String minutes = matcher.group(2);
-            String second = matcher.group(3);
-            System.out.println(whole);
-            System.out.println(hour);
-            System.out.println(minutes);
-            System.out.println(second);
-        }
+        Template temp = new Template("Hello, ${name}! You are learning ${lang}!");
+        // method 1
+//        Map<String,String> map = new HashMap<>();
+//        map.put("name","Emma");
+//        map.put("lang","Java");
+        // method 2
+        Map<String, String> map = Map.of("name", "Emma", "lang", "Java");
+        System.out.println(temp.render(map));
+    }
+}
 
+// 编写一个简单的模板引擎
+class Template {
+
+    final String template;
+    final Pattern pattern = Pattern.compile("\\$\\{(\\w+)\\}");
+
+    public Template(String template) {
+        this.template = template;
+    }
+
+    public String render(Map<String, String> data) {
+        Matcher m = pattern.matcher(template);
+        StringBuilder sb = new StringBuilder();
+        while (m.find()) {
+            m.appendReplacement(sb, data.get(m.group(1)).toString());
+        }
+        m.appendTail(sb);
+        return sb.toString();
     }
 
 }
-
-
 
 
 
