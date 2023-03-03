@@ -10,41 +10,45 @@ public class Main {
     public int age;
 
     public static void main(String[] args) throws Exception {
-        Template temp = new Template("Hello, ${name}! You are learning ${lang}!");
-        // method 1
-//        Map<String,String> map = new HashMap<>();
-//        map.put("name","Emma");
-//        map.put("lang","Java");
-        // method 2
-        Map<String, String> map = Map.of("name", "Emma", "lang", "Java");
-        System.out.println(temp.render(map));
+
+        Thread t = new MyThread();
+        t.start();
+        Thread.sleep(1000);
+        t.interrupt(); // 中断t线程
+        t.join(); // 等待t线程结束
+        System.out.println("end");
+
     }
 }
 
-// 编写一个简单的模板引擎
-class Template {
-
-    final String template;
-    final Pattern pattern = Pattern.compile("\\$\\{(\\w+)\\}");
-
-    public Template(String template) {
-        this.template = template;
-    }
-
-    public String render(Map<String, String> data) {
-        Matcher m = pattern.matcher(template);
-        StringBuilder sb = new StringBuilder();
-        while (m.find()) {
-            m.appendReplacement(sb, data.get(m.group(1)).toString());
+class MyThread extends Thread {
+    public void run() {
+        Thread hello = new HelloThread();
+        hello.start(); // 启动hello线程
+        try {
+            System.out.println("over");
+            hello.join(); // 等待hello线程结束
+        } catch (InterruptedException e) {
+            System.out.println("interrupted!");
         }
-        m.appendTail(sb);
-        return sb.toString();
+        hello.interrupt();
     }
-
 }
 
-
-
+class HelloThread extends Thread {
+    public void run() {
+        int n = 0;
+        while (!isInterrupted()) {
+            n++;
+            System.out.println(n + " hello!");
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                break;
+            }
+        }
+    }
+}
 
 
 
