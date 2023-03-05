@@ -1,56 +1,47 @@
 package org.practice2;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 public class Main {
-    public int age;
-
     public static void main(String[] args) throws Exception {
+        var c1 = new Counter();
 
-        Thread t = new MyThread();
-        t.start();
-        Thread.sleep(1000);
-        t.interrupt(); // 中断t线程
-        t.join(); // 等待t线程结束
-        System.out.println("end");
-
+        new Thread(() -> {
+            c1.add(2);
+        }).start();
+        new Thread(() -> {
+            c1.decrease(2);
+        }).start();
     }
 }
 
-class MyThread extends Thread {
-    public void run() {
-        Thread hello = new HelloThread();
-        hello.start(); // 启动hello线程
-        try {
-            System.out.println("over");
-            hello.join(); // 等待hello线程结束
-        } catch (InterruptedException e) {
-            System.out.println("interrupted!");
-        }
-        hello.interrupt();
-    }
-}
+class Counter {
+    private int value = 0;
+    private int another = 0;
+    public static final Object lockA = new Object();
+    public static final Object lockB = new Object();
 
-class HelloThread extends Thread {
-    public void run() {
-        int n = 0;
-        while (!isInterrupted()) {
-            n++;
-            System.out.println(n + " hello!");
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                break;
+    public void add(int m) {
+        synchronized (lockA) {
+            this.value += m;
+            System.out.println("add value" + this.value);
+            synchronized (lockB) {
+                this.another += m;
+                System.out.println("add another" + this.another);
             }
         }
+        System.out.println("add");
     }
+
+    public void decrease(int m) {
+        synchronized (lockA) {
+            this.value -= m;
+            System.out.println("dec value" + this.value);
+            synchronized (lockB) {
+                this.another -= m;
+                System.out.println("dec another" + this.another);
+            }
+        }
+        System.out.println("decrease");
+    }
+
 }
-
-
-
-
 
