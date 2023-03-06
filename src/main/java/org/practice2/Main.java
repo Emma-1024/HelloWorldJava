@@ -1,64 +1,72 @@
 package org.practice2;
-
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class Main {
     public static void main(String[] args) throws Exception {
-        var q = new TaskQueue();
-        var ts = new ArrayList<Thread>();
-        for (int i=0; i<5; i++) {
-            var t = new Thread() {
-                public void run() {
-                    // 执行task:
-                    while (true) {
-                        try {
-                            String s = q.getTask();
-                            System.out.println("execute task: " + s);
-                        } catch (InterruptedException e) {
-                            return;
-                        }
-                    }
-                }
-            };
-            t.start();
-            ts.add(t);         // 一个list 5个线程
-        }
-        var add = new Thread(() -> {
-            for (int i=0; i<10; i++) {
-                // 放入task:
-                String s = "t-" + Math.random();
-                System.out.println("add task: " + s);
-                q.addTask(s);
-                try { Thread.sleep(100); } catch(InterruptedException e) {}
-            }
-        });
+        var add = new AddThread();
+        var dec = new DecThread();
         add.start();
+        dec.start();
         add.join();
-        Thread.sleep(100);
-        for (var t : ts) {
-            // sleep/wait状态的线程会响应interrupt。
-            t.interrupt();
-        }
+        dec.join();
+        System.out.println(Counter.count);
     }
 
 }
 
-class TaskQueue {
-    Queue<String> queue = new LinkedList<>();
+class Counter {
+    public static final Object lock = new Object();
+    public static final Lock lock2 = new ReentrantLock();
+    public static int count = 0;
+}
 
-    public synchronized void addTask(String s) {
-        this.queue.add(s);
-        this.notifyAll();
-    }
+class AddThread extends Thread {
+    public void run() {
 
-    public synchronized String getTask() throws InterruptedException {
-        // 已唤醒的线程还需要重新获得锁后才能继续执行
-        while (queue.isEmpty()) {
-            this.wait();  // 使线程进入等待状态
+        for (int i = 0; i < 5; i++) {
+//            synchronized(Counter.lock2) {
+//                Counter.count += 1;
+//            }
+            Counter.lock2.lock();
+            try {
+                Counter.count += 1;
+                Thread.sleep(1005);
+                System.out.println("waiting" + (i + 1));
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            } finally {
+                Counter.lock2.unlock();
+            }
+
+
         }
-        return queue.remove();
+    }
+}
+
+class DecThread extends Thread {
+    public void run() {
+        for (int i = 0; i < 5; i++) {
+//            Counter.lock2.lock();
+//            synchronized(Counter.lock) {
+//                Counter.count -= 1;
+//            }
+            try {
+                if (Counter.lock2.tryLock(1, TimeUnit.SECONDS)) {
+                    System.out.println("start");
+                    try {
+                        Counter.count -= 1;
+                    } finally {
+                        Counter.lock2.unlock();
+                    }
+                } else {
+                    System.out.println("give up");
+                }
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 }
 
