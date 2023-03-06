@@ -1,54 +1,64 @@
 package org.practice2;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
+
 public class Main {
-    static final Object LOCK_A = new Object();
-    static final Object LOCK_B = new Object();
     public static void main(String[] args) throws Exception {
-        new Thread1().start();
-        new Thread2().start();
-    }
-    static void sleep1s() {
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        var q = new TaskQueue();
+        var ts = new ArrayList<Thread>();
+        for (int i=0; i<5; i++) {
+            var t = new Thread() {
+                public void run() {
+                    // 执行task:
+                    while (true) {
+                        try {
+                            String s = q.getTask();
+                            System.out.println("execute task: " + s);
+                        } catch (InterruptedException e) {
+                            return;
+                        }
+                    }
+                }
+            };
+            t.start();
+            ts.add(t);         // 一个list 5个线程
+        }
+        var add = new Thread(() -> {
+            for (int i=0; i<10; i++) {
+                // 放入task:
+                String s = "t-" + Math.random();
+                System.out.println("add task: " + s);
+                q.addTask(s);
+                try { Thread.sleep(100); } catch(InterruptedException e) {}
+            }
+        });
+        add.start();
+        add.join();
+        Thread.sleep(100);
+        for (var t : ts) {
+            // sleep/wait状态的线程会响应interrupt。
+            t.interrupt();
         }
     }
+
 }
 
-class Thread1 extends Thread {
+class TaskQueue {
+    Queue<String> queue = new LinkedList<>();
 
-    public void run() {
-        System.out.println("Thread-1: try get lock A...");
-        synchronized (Main.LOCK_A) {
-            System.out.println("Thread-1: lock A got.");
-            Main.sleep1s();
-            System.out.println("Thread-1: try get lock B...");
-            synchronized (Main.LOCK_B) {
-                System.out.println("Thread-1: lock B got.");
-                Main.sleep1s();
-            }
-            System.out.println("Thread-1: lock B released.");
-        }
-        System.out.println("Thread-1: lock A released.");
+    public synchronized void addTask(String s) {
+        this.queue.add(s);
+        this.notifyAll();
     }
-}
 
-class Thread2 extends Thread {
-
-    public void run() {
-        System.out.println("Thread-2: try get lock A...");
-        synchronized (Main.LOCK_A) {
-            System.out.println("Thread-2: lock A got.");
-            Main.sleep1s();
-            System.out.println("Thread-2: try get lock B...");
-            synchronized (Main.LOCK_B) {
-                System.out.println("Thread-2: lock B got.");
-                Main.sleep1s();
-            }
-            System.out.println("Thread-2: lock B released.");
+    public synchronized String getTask() throws InterruptedException {
+        // 已唤醒的线程还需要重新获得锁后才能继续执行
+        while (queue.isEmpty()) {
+            this.wait();  // 使线程进入等待状态
         }
-        System.out.println("Thread-2: lock A released.");
+        return queue.remove();
     }
 }
 
