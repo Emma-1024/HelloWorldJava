@@ -7,8 +7,21 @@ import java.util.concurrent.*;
 public class ThreadFuture {
     public static void ThreadFuture() throws ExecutionException, InterruptedException {
         ExecutorService es = Executors.newFixedThreadPool(4);
-        Future<BigDecimal> future = es.submit(new Task1("1111"));
-        System.out.println(future.get());
+        Future<BigDecimal> future = es.submit(new Task1("this task"));
+        BigDecimal result = null;
+        try {
+            result = future.get(3, TimeUnit.SECONDS);
+        } catch (TimeoutException e) {
+            System.out.println("time out");
+        } finally {
+            if (future.isDone()) {
+                System.out.println("The result's " + result);
+            } else {
+                System.out.println("I will Cancel without waiting");
+                future.cancel(true);
+                System.out.println(future.isDone());
+            }
+        }
         es.shutdown();
     }
 }
