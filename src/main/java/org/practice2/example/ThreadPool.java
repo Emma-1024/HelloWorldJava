@@ -22,7 +22,7 @@ public class ThreadPool {
         // 0秒后开始执行定时任务，每1秒执行:
 //        ses.scheduleAtFixedRate(new Task("fixed-rate"),0, 1, TimeUnit.SECONDS);
         // 0秒后开始执行定时任务，以1秒为间隔执行:
-        ses.scheduleWithFixedDelay(new Task("fixed-delay"),0,1,TimeUnit.SECONDS);
+        ses.scheduleWithFixedDelay(new Tltask("fixed-delay"),0,1,TimeUnit.SECONDS);
 //        ses.shutdown();
     }
 }

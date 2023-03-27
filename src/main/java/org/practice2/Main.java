@@ -1,7 +1,6 @@
 package org.practice2;
 
-import org.practice2.example.ThreadCompletableFuture;
-import org.practice2.example.ThreadForkJoin;
+import org.practice2.example.ThreadThreadLocal;
 
 public class Main {
     public static void main(String[] args) throws Exception {
@@ -10,6 +9,7 @@ public class Main {
 //        ThreadPool.ThreadPool();
 //        ThreadFuture.ThreadFuture();
 //        ThreadCompletableFuture.ThreadCompletableFuture();
-        ThreadForkJoin.threadForkJoin();
+//        ThreadForkJoin.threadForkJoin();
+        ThreadThreadLocal.threadThreadLocal();
     }
 }
