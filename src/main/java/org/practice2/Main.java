@@ -1,9 +1,6 @@
 package org.practice2;
 
-import org.practice2.example.Lambda;
-import org.practice2.example.ThreadForkJoin;
-import org.practice2.example.ThreadThreadLocal;
-import org.practice2.example.ThreadVirtualThread;
+import org.practice2.example.*;
 
 public class Main {
     public static void main(String[] args) throws Exception {
@@ -15,6 +12,8 @@ public class Main {
 //        ThreadForkJoin.threadForkJoin();
 //        ThreadThreadLocal.threadThreadLocal();
 //        ThreadVirtualThread.main();
-        Lambda.main();
+//        Lambda.main();
+        TestAnnotation.testMethod();
+
     }
 }
