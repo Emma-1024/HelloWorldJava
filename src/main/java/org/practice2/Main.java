@@ -13,7 +13,7 @@ public class Main {
 //        ThreadThreadLocal.threadThreadLocal();
 //        ThreadVirtualThread.main();
 //        Lambda.main();
-        TestAnnotation.testMethod();
-
+//        TestAnnotation.testMethod();
+        FibonacciStream.main();
     }
 }
