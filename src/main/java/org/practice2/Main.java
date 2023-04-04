@@ -14,6 +14,7 @@ public class Main {
 //        ThreadVirtualThread.main();
 //        Lambda.main();
 //        TestAnnotation.testMethod();
-        FibonacciStream.main();
+//        FibonacciStream.main();
+        FunctionalProgrammingStream.main();
     }
 }
