@@ -15,6 +15,7 @@ public class Main {
 //        Lambda.main();
 //        TestAnnotation.testMethod();
 //        FibonacciStream.main();
-        FunctionalProgrammingStream.main();
+//        FunctionalProgrammingStreamFilter.main();
+        FunctionalProgrammingStreamReduce.main();
     }
 }
