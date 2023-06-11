@@ -4,14 +4,25 @@ import java.util.Arrays;
 import java.util.Scanner;
 import java.util.Collections;
 
+import org.example.DumplingCalorie;
+
 public class Main {
 
     public static void main(String[] args) {
+        DumplingCalorie c = new DumplingCalorie();
+        c.totalDumplingWrapper = 116;
+        c.wrappedDumpling = 106;
+        c.ateDumpling = 17.5;
+        c.dumplingWrapper = 1200;
+        c.chive = 1064;
+        c.pork = 960;
+        c.shrimp = 1200;
+        c.printEachFoodCalorie();
 //        Person p = new Person("xiaoming", 12);
 //        p.setName("Huang", "xiaoming");
 //        System.out.println(p.getName());
 //        p.setName("Huang");
-
+//
 //        p.setAge(12);
 //        System.out.println(p.getName());
 //        System.out.println(p.getAge());
@@ -166,6 +177,7 @@ class Book {
     public String getName() {
         return name;
     }
+
     public void setName(String name) {
         this.name = name;
     }
