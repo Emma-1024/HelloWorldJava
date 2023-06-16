@@ -2,7 +2,7 @@ package org.practice2.example;
 
 public class TestForThread {
     private int a = 0;
-    Object lock = new Object();
+    static Object lock = new Object();
 
     public int count() {
         synchronized (lock) {
@@ -14,6 +14,7 @@ public class TestForThread {
     }
 
     public int test() {
+        TestForThread t2 = new TestForThread();
         for (int i = 0; i < 100; i++) {
             new Thread(() -> {
                 this.count();
