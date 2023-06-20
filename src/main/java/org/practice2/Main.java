@@ -22,5 +22,6 @@ public class Main {
 //        FunctionalProgrammingStreamReduce.main();
         TestForThread t1 = new TestForThread();
         System.out.println(t1.test());
+
     }
 }
