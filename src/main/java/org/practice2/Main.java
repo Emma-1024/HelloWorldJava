@@ -2,9 +2,6 @@ package org.practice2;
 
 import org.practice2.example.*;
 
-import javax.swing.tree.TreeNode;
-import java.util.Arrays;
-
 public class Main {
     public static void main(String[] args) throws Exception {
 //        ThreadCondition.threadCondition();
@@ -20,8 +17,8 @@ public class Main {
 //        FibonacciStream.main();
 //        FunctionalProgrammingStreamFilter.main();
 //        FunctionalProgrammingStreamReduce.main();
-        TestForThread t1 = new TestForThread();
-        System.out.println(t1.test());
-
+//        TestForThread t1 = new TestForThread();
+//        System.out.println(t1.test());
+        MethodReferenceExample.go();
     }
 }
